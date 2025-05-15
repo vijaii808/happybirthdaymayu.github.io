@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -19,23 +18,20 @@
     h1, h2 {
       animation: fadeIn 2s ease-in;
       color: #fff;
-      text-shadow: 
-        0 0 5px #ff8cd6,
-        0 0 10px #ff5ec4,
-        0 0 15px #ff33aa;
+      text-shadow: 0 0 5px #ff8cd6, 0 0 10px #ff5ec4, 0 0 15px #ff33aa;
     }
 
-    .page {
+    .page, .start-page {
       display: none;
       padding: 40px;
       min-height: 100vh;
     }
 
-    .page.active {
+    .active {
       display: block;
     }
 
-    .nav-btn, .answer-btn {
+    .nav-btn, .answer-btn, .start-btn {
       padding: 10px 20px;
       margin: 20px;
       background-color: #ff66c4;
@@ -48,9 +44,15 @@
       transition: transform 0.2s ease;
     }
 
-    .nav-btn:hover, .answer-btn:hover {
+    .nav-btn:hover, .answer-btn:hover, .start-btn:hover {
       transform: scale(1.05);
       background-color: #ff33aa;
+    }
+
+    audio {
+      margin-top: 20px;
+      width: 300px;
+      outline: none;
     }
 
     .image-section img {
@@ -128,17 +130,24 @@
       animation: float 5s linear forwards;
       z-index: 100;
     }
-
   </style>
 </head>
 <body>
 
-<audio autoplay loop>
-  <source src="background.mp3" type="audio/mpeg">
-  Your browser does not support the audio tag.
-</audio>
+<!-- Intro Page -->
+<div class="start-page active" id="startPage">
+  <h1>🎶 Before We Start...</h1>
+  <h2>Hey Mayuuu! Click play below and enjoy this song while u go through the surprise 💖</h2>
+  <audio id="introAudio" controls>
+    <source src="Song/Vazhithunaiye.mp3" type="audio/mpeg">
+    Your browser does not support the audio tag.
+  </audio>
+  <br />
+  <button class="start-btn" onclick="startSite()">Start the Surprise 🎁</button>
+</div>
 
-<div class="page active" id="page1">
+<!-- Main Pages Start -->
+<div class="page" id="page1">
   <h1>Happy Birthday Mayuuu! 🎉</h1>
   <h2>
     Okay okay MAYUUU listen up 💁‍♂️<br><br>
@@ -154,8 +163,8 @@
 <div class="page" id="page2">
   <h1>Look at my cutie</h1>
   <div class="image-section">
-    <img src="C:\Users\vijai\OneDrive\Documents\GitHub\happybirthdaymayu.github.io\A5A63050-7B08-4A1F-B815-344583D470BE.jpg" alt="Photo 1">
-    <img src="C:\Users\vijai\OneDrive\Documents\GitHub\happybirthdaymayu.github.io\8D681EF4-FE86-42CE-BB11-C0AD2E05EBC6.jpg" alt="Photo 2">
+    <img src="Images/her1.png" alt="Photo 1">
+    <img src="Images/her2.jpg" alt="Photo 2">
   </div>
   <button class="nav-btn" onclick="nextPage()">Next</button>
 </div>
@@ -179,7 +188,41 @@
   <button class="nav-btn" onclick="nextPage()">Next</button>
 </div>
 
+<!-- Countdown Prank Page -->
+<!-- Countdown Prank Page -->
 <div class="page" id="page5">
+  <h1>Wait wait wait... 😳</h1>
+  <h2>This is serious now... loading the most important question of ur life 😶‍🌫️</h2>
+  <h2 id="countdownText">Loading in 5...</h2>
+  <button class="nav-btn" id="revealBtn" style="display:none;" onclick="nextPage()">Reveal Question 😳</button>
+</div>
+
+<!-- Not Yet Page -->
+<div class="page" id="page6">
+  <h1>Oops... not yet 😅</h1>
+  <h2>
+    Okay hold on – before we even *think* about asking anything,<br>
+    I gotta say something important. 👇<br><br>
+    MAYUUU, u are literally one of the prettiest souls out there. <br>
+    I mean it. I hope u *never ever* feel insecure about urself again.<br><br>
+    Ur smile? Deadly. Ur eyes? Mischief & magic.<br>
+    Ur heart? SO FREAKIN GOLD it should be in a museum.<br><br>
+    U make people laugh, u care way too much (and that's a flex),<br>
+    and somehow even when u roast me, I feel blessed 😭💕<br><br>
+    So this is just me reminding u — you’re rare. You’re art. You’re *YOU*. 💖
+  </h2>
+  <button class="nav-btn" onclick="nextPage()">Okay, now?</button>
+</div>
+
+<!-- Are You Ready Page -->
+<div class="page" id="page7">
+  <h1>Okay... NOW are you actually ready? 😳</h1>
+  <h2>Brace yourself. No turning back. It's happening...</h2>
+  <h2 id="countdownReveal" style="font-size: 3em; margin-top: 30px;"></h2>
+</div>
+
+<!-- Proposal Page -->
+<div class="page" id="page8">
   <div class="proposal">
     <h2>I know u hate being someone's girlfriend...</h2>
     <h2>So, will u be my wife? 💍</h2>
@@ -194,13 +237,22 @@
 
 <script>
 let currentPage = 1;
+
+function startSite() {
+  document.getElementById("startPage").classList.remove("active");
+  document.getElementById("page" + currentPage).classList.add("active");
+}
+
 function nextPage() {
   document.getElementById("page" + currentPage).classList.remove("active");
   currentPage++;
   document.getElementById("page" + currentPage).classList.add("active");
+
+  if (currentPage === 5) startCountdown();
+  if (currentPage === 7) finalCountdown();
 }
 
-// Heart-catching mini game
+// Heart mini-game
 const gameArea = document.getElementById("gameArea");
 if (gameArea) {
   let count = 0;
@@ -220,6 +272,37 @@ if (gameArea) {
   setInterval(spawnHeart, 800);
 }
 
+function startCountdown() {
+  let timeLeft = 5;
+  const countdownText = document.getElementById("countdownText");
+  const revealBtn = document.getElementById("revealBtn");
+
+  const countdown = setInterval(() => {
+    timeLeft--;
+    countdownText.innerText = `Loading in ${timeLeft}...`;
+    if (timeLeft === 0) {
+      clearInterval(countdown);
+      countdownText.innerText = "Okay... Are you ready?? 😬";
+      revealBtn.style.display = "inline-block";
+    }
+  }, 1000);
+}
+
+function finalCountdown() {
+  const revealText = document.getElementById("countdownReveal");
+  const steps = ["3...", "2...", "1...", "💖"];
+  let index = 0;
+
+  const interval = setInterval(() => {
+    revealText.innerText = steps[index];
+    index++;
+    if (index === steps.length) {
+      clearInterval(interval);
+      setTimeout(() => nextPage(), 800);
+    }
+  }, 800);
+}
+
 function celebrate() {
   const msg = document.getElementById("loveMessage");
   msg.style.display = "block";
@@ -231,13 +314,7 @@ function celebrate() {
     balloon.style.fontSize = Math.random() * 20 + 20 + "px";
     balloon.innerText = "🎈";
     document.body.appendChild(balloon);
-
-    setTimeout(() => {
-      balloon.remove();
-    }, 5000);
+    setTimeout(() => balloon.remove(), 5000);
   }
 }
 </script>
-
-</body>
-</html>
